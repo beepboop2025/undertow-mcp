@@ -1,9 +1,9 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.beepboop2025/undertow",
   "title": "Undertow — market liquidity map",
   "description": "Live exit costs by venue, depth concentration, and a sealed calls record that keeps its misses.",
-  "version": "1.1.1",
+  "version": "1.7.0",
   "repository": {
     "url": "https://github.com/beepboop2025/undertow-mcp",
     "source": "github"

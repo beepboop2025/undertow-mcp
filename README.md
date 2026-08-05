@@ -2,6 +2,9 @@
 
 **Endpoint:** `https://api.seiche.info/undertow/mcp` (streamable HTTP, no install)
 
+**Try it live:** [liquilens-undertow.com/developers](https://liquilens-undertow.com/developers/) ·
+**API catalog:** [api.seiche.info/undertow](https://api.seiche.info/undertow/)
+
 Your agent knows the price of an asset. This tells it what **leaving** costs: the
 per-venue exit cost at your size, how concentrated the depth behind that quote is,
 and whether depth has actually collapsed lately or only looks calm.
@@ -35,9 +38,16 @@ none of this is visible in a price feed.
 | `venue_price_reconciliation` | What the price IS when venues disagree: a consensus mark weighted by resting depth over squared half-spread, plus the blindness gap between the deepest venue and consensus | free |
 | `liquidity_tiers` | The board: a liquidity tier per market segment (UST, IG, HY, equities, ETF, FX, China basin, crypto) with the funding-stress overlay | free |
 | `sealed_record` | The sealed forward-calls record, hash-chained and signed before outcomes, misses kept | free |
+| `unwind_watch` | Banded public watch over institutional unwind time and forced-sale pressure, with exact sensitive quantities withheld | free |
 | `agent_access_status` | Your tier, today's meter, and how to get more | free |
 | `board_full` | Every measure with its stress percentile or ACCRUING label, limits and analyst note | subscriber |
 | `exit_desk_full` | BTC and ETH at every published rung, plus the venue-failure withdrawal scenario | subscriber |
+| `exit_schedule` | Position-sized hour-by-hour liquidation schedule beside immediate and TWAP baselines | subscriber |
+| `tide_clock` | Clock-phase liquidity map and exit-cost-by-phase for BTC or ETH perpetuals | subscriber |
+| `corporate_transmission` | Whether funding stress is reaching nonfinancial firms | subscriber |
+| `household_credit` | Whether funding stress is reaching household balance sheets | subscriber |
+| `divergence_status` | Compact comparison of corporate and household transmission regimes | subscriber |
+| `unwind_stress` | Full institutional unwind and forced-sale stress pack | subscriber |
 
 ## What it refuses to do
 
@@ -86,8 +96,10 @@ never a dropped connection.
 ## About this repository
 
 This repo is the **listing**: a README and the two manifests that let directories
-describe the server accurately. The server itself is hosted at the endpoint above
-and its engines are a separate, private codebase. Nothing here computes a number.
+describe the server accurately. The server itself is hosted at the endpoint above;
+its source and verification tests live in the
+[Undertow product repository](https://github.com/beepboop2025/liquilens-undertow).
+Nothing in this listing repo computes a number.
 
 ## Siblings from the same lab
 
