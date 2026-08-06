@@ -1,13 +1,12 @@
-# Undertow MCP: the market liquidity map as agent tools
+# Undertow MCP | Market liquidity and exit-cost tools
 
 **Endpoint:** `https://api.seiche.info/undertow/mcp` (streamable HTTP, no install)
 
 **Try it live:** [liquilens-undertow.com/developers](https://liquilens-undertow.com/developers/) ·
 **API catalog:** [api.seiche.info/undertow](https://api.seiche.info/undertow/)
 
-Your agent knows the price of an asset. This tells it what **leaving** costs: the
-per-venue exit cost at your size, how concentrated the depth behind that quote is,
-and whether depth has actually collapsed lately or only looks calm.
+Undertow exposes estimated exit cost by position size and venue, the concentration of
+quoted depth, realized depth-collapse episodes, and liquidity tiers across market segments.
 
 ## Add it
 
@@ -18,15 +17,15 @@ Claude Code:
 Claude.ai / ChatGPT / Cursor: add a custom connector or MCP server with the URL above.
 No key and no wallet for the free surface.
 
-## Why it exists
+## Example
 
 On 2026-07-30, selling $1,000,000 of BTC cost **2.87 bp on Binance and 13.65 bp on
 Bitfinex**: about $287 against $1,365 for the same asset in the same minute. Earlier
 the same morning the dearest venue was a different exchange entirely, at 34.5 bp.
 
-The cheapest door tends to stay put. The worst door changes identity during the day.
-An agent routing off yesterday's ranking is reading a map that has already moved, and
-none of this is visible in a price feed.
+Venue rankings can change during the day, and those differences are not visible in a
+single consolidated price. Undertow publishes the observation time and venue inputs with
+the estimate.
 
 ## Tools
 
@@ -49,9 +48,7 @@ none of this is visible in a price feed.
 | `divergence_status` | Compact comparison of corporate and household transmission regimes | subscriber |
 | `unwind_stress` | Full institutional unwind and forced-sale stress pack | subscriber |
 
-## What it refuses to do
-
-It will not flatter you, and an agent quoting it should not either.
+## Limitations
 
 - **PARTIAL is not calm.** A segment reads PARTIAL when fewer than two of its measures
   have earned a scoring history. Four of nine segments read PARTIAL on 2026-07-30, and
@@ -61,9 +58,8 @@ It will not flatter you, and an agent quoting it should not either.
   snapshot and not a real-time feed.
 - **Crypto measures are still accruing**, so the board has not earned a crypto stress
   percentile and you should never quote one from it.
-- **The sealed record keeps its misses.** Calls are hash-chained and signed before
-  their outcomes are knowable, then scored against the immutable point-in-time board.
-  Quote the misses as prominently as the hits.
+- **The sealed record includes misses.** Calls are hash-chained and signed before
+  their outcomes are knowable, then scored against the point-in-time board.
 
 Research and market data, not investment advice.
 
@@ -103,17 +99,13 @@ Nothing in this listing repo computes a number.
 
 ## Siblings from the same lab
 
-- [Seiche](https://api.seiche.info/mcp): US money-market funding stress, the plumbing
-  under the markets. Free public good.
+- [Seiche](https://api.seiche.info/mcp): US dollar funding stress.
 - [LiquiLens](https://api.liquilens.in/mcp): bank, NBFC and lender failure risk, and
   whether that stress is reaching firms and households.
 - [groundcheck](https://groundcheck.seiche.info): claim grounding and citation
   verification for general text.
 - Palimpsest (`https://api.seiche.info/palimpsest/mcp`): live internet-censorship
   signals.
-
-Seiche watches the plumbing, Undertow watches the markets, LiquiLens watches the
-institutions.
 
 Human front door: [liquilens-undertow.com](https://liquilens-undertow.com) and the
 [Telegram desk](https://t.me/undertow_LiquiLens_bot).
