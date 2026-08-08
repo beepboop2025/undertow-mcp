@@ -19,9 +19,10 @@ No key and no wallet for the free surface.
 
 ## Example
 
-On 2026-07-30, selling $1,000,000 of BTC cost **2.87 bp on Binance and 13.65 bp on
-Bitfinex**: about $287 against $1,365 for the same asset in the same minute. Earlier
-the same morning the dearest venue was a different exchange entirely, at 34.5 bp.
+In the snapshot generated at **2026-08-08T15:01:22Z**, selling $1,000,000 of BTC
+at the selected **$1,000,000 published size rung** cost **2.386 bp on Binance and
+13.623 bp on Bitfinex**: about $238.60 against $1,362.30. Gemini was the dearest
+observed venue in that same snapshot at 25.852 bp, or about $2,585.20.
 
 Venue rankings can change during the day, and those differences are not visible in a
 single consolidated price. Undertow publishes the observation time and venue inputs with
@@ -114,7 +115,7 @@ Nothing in this listing repo computes a number.
   whether that stress is reaching firms and households.
 - [groundcheck](https://groundcheck.seiche.info): claim grounding and citation
   verification for general text.
-- Palimpsest (`https://api.seiche.info/palimpsest/mcp`): live internet-censorship
+- [Palimpsest](https://api.seiche.info/palimpsest/mcp): live internet-censorship
   signals.
 
 Human front door: [liquilens-undertow.com](https://liquilens-undertow.com) and the
