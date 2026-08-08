@@ -48,6 +48,14 @@ the estimate.
 | `divergence_status` | Compact comparison of corporate and household transmission regimes | subscriber |
 | `unwind_stress` | Full institutional unwind and forced-sale stress pack | subscriber |
 
+Commodity futures are intentionally absent from that table. Undertow has no
+licensed point-in-time depth by contract month, venue and session, so
+executable commodity exit cost is `CANNOT_ASSESS_EXECUTABLE_EXIT_COST`; open
+interest or daily volume is never substituted. For aggregate WTI/Henry Hub
+cash pressure, Cushing and benchmark structure, call Seiche's public
+`oil_funding_context` or use `/oil` in
+[`@seiche_desk_bot`](https://t.me/seiche_desk_bot).
+
 ## Limitations
 
 - **PARTIAL is not calm.** A segment reads PARTIAL when fewer than two of its measures
@@ -60,6 +68,8 @@ the estimate.
   percentile and you should never quote one from it.
 - **The sealed record includes misses.** Calls are hash-chained and signed before
   their outcomes are knowable, then scored against the point-in-time board.
+- **Commodity execution is a declared coverage gap.** Ballast is useful upstream
+  context from Seiche, not a depth ladder and not an Undertow exit-cost estimate.
 
 Research and market data, not investment advice.
 
