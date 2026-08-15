@@ -1,0 +1,41 @@
+{
+  "canonical": {
+    "releaseCommit": "79b3f6bc40b2917795954ad5a7119a8a95ce5b74",
+    "implementationRepository": "https://github.com/beepboop2025/liquilens-undertow",
+    "listingRepository": "https://github.com/beepboop2025/undertow-mcp"
+  },
+  "serverVersion": "1.9.0",
+  "protocolVersions": [
+    "2026-07-28",
+    "2025-11-25",
+    "2025-06-18",
+    "2025-03-26"
+  ],
+  "publicTools": [
+    "agent_access_status",
+    "depth_episodes",
+    "exit_cost",
+    "latest_article",
+    "liquidity_tiers",
+    "sealed_record",
+    "unwind_watch",
+    "venue_concentration",
+    "venue_price_reconciliation"
+  ],
+  "subscriberTools": [
+    "board_full",
+    "corporate_transmission",
+    "divergence_status",
+    "exit_desk_full",
+    "exit_schedule",
+    "household_credit",
+    "tide_clock",
+    "unwind_stress"
+  ],
+  "prompts": [
+    "can_this_book_exit",
+    "exit_cost_check",
+    "market_liquidity_briefing"
+  ],
+  "resourceTemplates": []
+}

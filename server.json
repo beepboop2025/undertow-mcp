@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.beepboop2025/undertow",
   "title": "Undertow market liquidity and exit-cost tools",
-  "description": "Exit-cost estimates, depth concentration, liquidity tiers, and sealed records; no commodity futures.",
-  "version": "1.7.1",
+  "description": "Daily editorials, exit costs, depth concentration, tiers, and sealed records. No commodity futures.",
+  "version": "1.9.0",
   "repository": {
     "url": "https://github.com/beepboop2025/undertow-mcp",
     "source": "github"
