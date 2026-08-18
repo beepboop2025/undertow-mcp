@@ -8,8 +8,11 @@
 Undertow exposes estimated exit cost by position size and venue, the concentration of
 quoted depth, realized depth-collapse episodes, and liquidity tiers across market segments.
 This MCP 1.9.0 endpoint exposes 17 read-only tools, split into 9 public and 8 subscriber
-tools, plus 3 guided prompts. Its capability inventory is pinned to signed core commit
-`79b3f6bc40b2917795954ad5a7119a8a95ce5b74`.
+tools, plus 3 guided prompts. Its capability inventory is pinned to liquilens-undertow
+commit `d1f5f5f3b4667dd6fd3b939f637503e1d4c896bf`, the hosted implementation at
+`deploy/hetzner/undertow-mcp`. The stdio discovery server in
+`undertow_mm/mcp_server.py` 1.8.0 is a different eight-tool surface and is not
+this registry listing.
 
 ## Add it
 
@@ -131,9 +134,10 @@ never a dropped connection.
 
 This repo is the **listing**: a README and the two manifests that let directories
 describe the server accurately. The server itself is hosted at the endpoint above;
-its source and verification tests live in the
-[Undertow product repository](https://github.com/beepboop2025/liquilens-undertow).
-Nothing in this listing repo computes a number.
+its source is `deploy/hetzner/undertow-mcp` in the
+[Undertow product repository](https://github.com/beepboop2025/liquilens-undertow)
+and the registry target remains hosted 1.9.0. Nothing in this listing repo
+computes a number.
 
 ## Siblings from the same lab
 
