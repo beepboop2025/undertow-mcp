@@ -132,6 +132,52 @@ class ListingContractTests(unittest.TestCase):
         self.assertIn("PARTIAL is not calm", self.readme)
         self.assertIn("No commodity futures", self.server["description"])
         self.assertNotIn("MCP 1.7.1", self.readme)
+        self.assertNotIn("MCP 1.8.0", self.readme)
+
+    def test_pin_version_and_catalog_stay_on_hosted_release(self) -> None:
+        pin = self.contract["canonical"]["releaseCommit"]
+        version = self.contract["serverVersion"]
+        hosted_url = self.server["remotes"][0]["url"]
+        stdio_only = {
+            "attested_feed_health",
+            "institutional_flows",
+            "market_liquidity_board",
+            "paid_feed_catalog",
+            "verify_record_howto",
+        }
+
+        self.assertEqual(version, "1.9.0")
+        self.assertEqual(self.server["version"], version)
+        self.assertIn(pin, self.readme)
+        self.assertIn("deploy/hetzner/undertow-mcp", self.readme)
+        self.assertIn(
+            self.contract["canonical"]["implementationRepository"], self.readme
+        )
+        self.assertIn(hosted_url, self.readme)
+        self.assertIn(f"version {version}", self.readme)
+        self.assertEqual(
+            set(self.contract["canonical"]),
+            {
+                "releaseCommit",
+                "implementationRepository",
+                "listingRepository",
+            },
+        )
+
+        advertised = set(self.contract["publicTools"]) | set(
+            self.contract["subscriberTools"]
+        )
+        self.assertFalse(advertised & stdio_only)
+        for name in stdio_only:
+            self.assertNotIn(f"`{name}`", self.readme)
+
+        self.assertEqual(
+            self.glama["$schema"],
+            "https://glama.ai/mcp/schemas/server.json",
+        )
+        self.assertEqual(self.glama["maintainers"], ["beepboop2025"])
+        self.assertNotIn("version", self.glama)
+        self.assertNotIn("tools", self.glama)
 
     def test_secondary_registry_metadata_is_minimal(self) -> None:
         self.assertEqual(
