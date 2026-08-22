@@ -139,6 +139,32 @@ its source is `deploy/hetzner/undertow-mcp` in the
 and the registry target remains hosted 1.9.0. Nothing in this listing repo
 computes a number.
 
+## Verification and deployment boundary
+
+Every push and pull request checks out the Undertow product repository at the exact
+40-character `releaseCommit` in `contract.json`. CI then derives the public/subscriber
+split, prompt inventory, protocol versions, server identity and registry manifest from
+that clean pinned checkout. A branch name or the current product-repository HEAD is
+never substituted for the pin.
+
+A separate scheduled and manually dispatchable smoke makes anonymous, read-only calls
+to the listed endpoint. It initializes the legacy protocol, exercises modern discovery,
+checks the public tools, subscriber advertisement, prompts and explicit empty resource
+catalogs, then calls `agent_access_status`. It does not use a bearer token or exercise a
+subscriber tool. Run the same checks locally with:
+
+    python3 -m unittest discover -s tests -v
+    python3 scripts/verify_core_pin.py --core /path/to/exact/core/checkout
+    python3 scripts/smoke_live_mcp.py
+
+The source pin is a reviewed **contract boundary**, not an HTTP deployment receipt.
+Undertow's release controller records the deployed SHA and append-only receipts on the
+host, while the public MCP response currently reports its semantic version and
+capability catalog but no exact Git commit. Therefore a green live smoke proves the
+published behavior, not that the host runs this exact SHA. Do not repin this listing
+from a matching version or catalog alone; require the host's exact successful deployment
+receipt (or an equivalent authenticated SHA attestation) first.
+
 ## Siblings from the same lab
 
 - [Seiche](https://api.seiche.info/mcp): US dollar funding stress.

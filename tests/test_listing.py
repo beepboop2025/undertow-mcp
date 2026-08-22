@@ -46,6 +46,9 @@ class ListingContractTests(unittest.TestCase):
         cls.server = _strict_json(ROOT / "server.json")
         cls.glama = _strict_json(ROOT / "glama.json")
         cls.readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        cls.workflow = (ROOT / ".github/workflows/verify.yml").read_text(
+            encoding="utf-8"
+        )
 
     def test_contract_shape_and_inventories_are_deterministic(self) -> None:
         self.assertEqual(
@@ -163,6 +166,14 @@ class ListingContractTests(unittest.TestCase):
                 "listingRepository",
             },
         )
+        self.assertEqual(
+            self.contract["canonical"]["implementationRepository"],
+            "https://github.com/beepboop2025/liquilens-undertow",
+        )
+        self.assertEqual(
+            self.contract["canonical"]["listingRepository"],
+            "https://github.com/beepboop2025/undertow-mcp",
+        )
 
         advertised = set(self.contract["publicTools"]) | set(
             self.contract["subscriberTools"]
@@ -187,6 +198,35 @@ class ListingContractTests(unittest.TestCase):
                 "maintainers": ["beepboop2025"],
             },
         )
+
+    def test_ci_binds_listing_to_exact_core_and_live_contracts(self) -> None:
+        checkout = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+        self.assertEqual(self.workflow.count(checkout), 3)
+        for token in (
+            "workflow_dispatch:",
+            "schedule:",
+            "repository: beepboop2025/liquilens-undertow",
+            "ref: ${{ steps.core-pin.outputs.sha }}",
+            "python3 scripts/verify_core_pin.py --core .core/liquilens-undertow",
+            "github.event_name == 'schedule'",
+            "github.event_name == 'workflow_dispatch'",
+            "python3 scripts/smoke_live_mcp.py",
+        ):
+            self.assertIn(token, self.workflow)
+        self.assertNotIn("@master", self.workflow)
+        self.assertNotIn("@main", self.workflow)
+
+    def test_readme_states_source_pin_and_live_receipt_boundary(self) -> None:
+        normalized = " ".join(self.readme.split())
+        for token in (
+            "exact 40-character `releaseCommit`",
+            "never substituted for the pin",
+            "does not use a bearer token",
+            "not an HTTP deployment receipt",
+            "no exact Git commit",
+            "Do not repin",
+        ):
+            self.assertIn(token, normalized)
 
 
 if __name__ == "__main__":
