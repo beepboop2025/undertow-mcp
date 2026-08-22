@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import tempfile
 import unittest
 from pathlib import Path
@@ -64,6 +65,18 @@ def _core_fixture(*, move_public_to_subscriber: bool = False) -> tempfile.Tempor
     return directory
 
 
+def _fixture_receipt(core: Path) -> dict:
+    receipt = verify_core_pin.verify_receipt()
+    receipt = dict(receipt)
+    receipt["artifacts"] = {
+        path.as_posix(): {
+            "sha256": hashlib.sha256((core / path).read_bytes()).hexdigest()
+        }
+        for path in verify_core_pin.RECEIPT_ARTIFACTS
+    }
+    return receipt
+
+
 def _modern_result(result: dict) -> dict:
     result = dict(result)
     result["_meta"] = {
@@ -83,7 +96,8 @@ class CorePinVerifierTests(unittest.TestCase):
         with mock.patch.object(
             verify_core_pin, "_git_output", side_effect=[pin, ""]
         ):
-            verify_core_pin.verify(fixture.core)  # type: ignore[attr-defined]
+            core = fixture.core  # type: ignore[attr-defined]
+            verify_core_pin.verify(core, _fixture_receipt(core))
 
     def test_visibility_drift_fails_closed(self) -> None:
         fixture = _core_fixture(move_public_to_subscriber=True)
@@ -93,7 +107,8 @@ class CorePinVerifierTests(unittest.TestCase):
             verify_core_pin, "_git_output", side_effect=[pin, ""]
         ):
             with self.assertRaisesRegex(ValueError, "public tools"):
-                verify_core_pin.verify(fixture.core)  # type: ignore[attr-defined]
+                core = fixture.core  # type: ignore[attr-defined]
+                verify_core_pin.verify(core, _fixture_receipt(core))
 
     def test_wrong_sha_and_dirty_checkout_fail_closed(self) -> None:
         fixture = _core_fixture()
@@ -103,7 +118,7 @@ class CorePinVerifierTests(unittest.TestCase):
             verify_core_pin, "_git_output", return_value="0" * 40
         ):
             with self.assertRaisesRegex(ValueError, "listing pins"):
-                verify_core_pin.verify(core)
+                verify_core_pin.verify(core, _fixture_receipt(core))
         pin = _contract()["canonical"]["releaseCommit"]
         with mock.patch.object(
             verify_core_pin,
@@ -111,7 +126,24 @@ class CorePinVerifierTests(unittest.TestCase):
             side_effect=[pin, " M deploy/hetzner/undertow-mcp/undertow_mcp.py"],
         ):
             with self.assertRaisesRegex(ValueError, "modified tracked files"):
-                verify_core_pin.verify(core)
+                verify_core_pin.verify(core, _fixture_receipt(core))
+
+    def test_source_receipt_is_bound_to_contract_and_exact_artifacts(self) -> None:
+        receipt = verify_core_pin.verify_receipt()
+        self.assertEqual(receipt["releaseCommit"], _contract()["canonical"]["releaseCommit"])
+
+        fixture = _core_fixture()
+        self.addCleanup(fixture.cleanup)
+        core = fixture.core  # type: ignore[attr-defined]
+        mismatched = _fixture_receipt(core)
+        hosted_path = verify_core_pin.HOSTED_SERVER.as_posix()
+        mismatched["artifacts"][hosted_path]["sha256"] = "0" * 64
+        pin = _contract()["canonical"]["releaseCommit"]
+        with mock.patch.object(
+            verify_core_pin, "_git_output", side_effect=[pin, ""]
+        ):
+            with self.assertRaisesRegex(ValueError, "source-receipt mismatch"):
+                verify_core_pin.verify(core, mismatched)
 
 
 class LiveSmokeTests(unittest.TestCase):

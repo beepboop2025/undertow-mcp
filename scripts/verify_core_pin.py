@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import hashlib
 import json
 import re
 import subprocess
@@ -15,6 +16,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 HOSTED_SERVER = Path("deploy/hetzner/undertow-mcp/undertow_mcp.py")
 PIN_PATTERN = re.compile(r"[0-9a-f]{40}")
+SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
+RECEIPT_ARTIFACTS = (HOSTED_SERVER, Path("server.json"))
 
 
 def _strict_json(path: Path) -> dict[str, Any]:
@@ -48,6 +51,69 @@ def contract_pin() -> str:
     if not isinstance(pin, str) or PIN_PATTERN.fullmatch(pin) is None:
         raise ValueError("contract releaseCommit must be an exact lowercase SHA-1")
     return pin
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def verify_receipt() -> dict[str, Any]:
+    contract_path = ROOT / "contract.json"
+    contract = _strict_json(contract_path)
+    receipt = _strict_json(ROOT / "source-receipt.json")
+    expected_fields = {
+        "schemaVersion",
+        "releaseCommit",
+        "implementationRepository",
+        "contractSha256",
+        "artifacts",
+    }
+    if set(receipt) != expected_fields:
+        raise ValueError("source receipt fields differ from the reviewed schema")
+    if receipt["schemaVersion"] != 1:
+        raise ValueError("unsupported source receipt schema")
+    canonical = contract.get("canonical")
+    if not isinstance(canonical, dict):
+        raise ValueError("contract canonical field must be an object")
+    comparisons = {
+        "release commit": (
+            receipt["releaseCommit"],
+            canonical.get("releaseCommit"),
+        ),
+        "implementation repository": (
+            receipt["implementationRepository"],
+            canonical.get("implementationRepository"),
+        ),
+        "contract digest": (
+            receipt["contractSha256"],
+            _sha256(contract_path),
+        ),
+    }
+    mismatches = [
+        f"{label}: receipt={actual!r}, listing={expected!r}"
+        for label, (actual, expected) in comparisons.items()
+        if actual != expected
+    ]
+    if mismatches:
+        raise ValueError("source receipt mismatch:\n" + "\n".join(mismatches))
+
+    artifacts = receipt.get("artifacts")
+    expected_paths = {path.as_posix() for path in RECEIPT_ARTIFACTS}
+    if not isinstance(artifacts, dict) or set(artifacts) != expected_paths:
+        raise ValueError("source receipt artifact paths differ from the reviewed set")
+    for path, value in artifacts.items():
+        if (
+            not isinstance(value, dict)
+            or set(value) != {"sha256"}
+            or not isinstance(value["sha256"], str)
+            or SHA256_PATTERN.fullmatch(value["sha256"]) is None
+        ):
+            raise ValueError(f"invalid source receipt digest for {path}")
+    return receipt
 
 
 def _module(path: Path) -> ast.Module:
@@ -135,10 +201,11 @@ def _git_output(core: Path, *args: str) -> str:
     ).strip()
 
 
-def verify(core: Path) -> None:
+def verify(core: Path, receipt: dict[str, Any] | None = None) -> None:
     core = core.resolve()
     contract = _strict_json(ROOT / "contract.json")
     listing_server = _strict_json(ROOT / "server.json")
+    receipt = receipt or verify_receipt()
     expected_sha = contract_pin()
     actual_sha = _git_output(core, "rev-parse", "--verify", "HEAD^{commit}")
     if actual_sha != expected_sha:
@@ -146,6 +213,17 @@ def verify(core: Path) -> None:
     dirty = _git_output(core, "status", "--porcelain", "--untracked-files=all")
     if dirty:
         raise ValueError("pinned core checkout has modified tracked files")
+
+    receipt_mismatches = [
+        f"{path}: core={_sha256(core / path)!r}, receipt={details['sha256']!r}"
+        for path, details in receipt["artifacts"].items()
+        if _sha256(core / path) != details["sha256"]
+    ]
+    if receipt_mismatches:
+        raise ValueError(
+            "pinned-core/source-receipt mismatch:\n"
+            + "\n".join(receipt_mismatches)
+        )
 
     hosted_path = core / HOSTED_SERVER
     tree = _module(hosted_path)
@@ -195,10 +273,17 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--core", type=Path)
+    group.add_argument("--receipt", action="store_true")
     group.add_argument("--print-pin", action="store_true")
     args = parser.parse_args()
     if args.print_pin:
         print(contract_pin())
+    elif args.receipt:
+        receipt = verify_receipt()
+        print(
+            f"source receipt valid: {receipt['releaseCommit']} with "
+            f"{len(receipt['artifacts'])} reviewed artifact digests"
+        )
     else:
         verify(args.core)
     return 0

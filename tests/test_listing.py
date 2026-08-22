@@ -201,18 +201,17 @@ class ListingContractTests(unittest.TestCase):
 
     def test_ci_binds_listing_to_exact_core_and_live_contracts(self) -> None:
         checkout = "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
-        self.assertEqual(self.workflow.count(checkout), 3)
+        self.assertEqual(self.workflow.count(checkout), 2)
         for token in (
             "workflow_dispatch:",
             "schedule:",
-            "repository: beepboop2025/liquilens-undertow",
-            "ref: ${{ steps.core-pin.outputs.sha }}",
-            "python3 scripts/verify_core_pin.py --core .core/liquilens-undertow",
+            "python3 scripts/verify_core_pin.py --receipt",
             "github.event_name == 'schedule'",
             "github.event_name == 'workflow_dispatch'",
             "python3 scripts/smoke_live_mcp.py",
         ):
             self.assertIn(token, self.workflow)
+        self.assertNotIn("repository: beepboop2025/liquilens-undertow", self.workflow)
         self.assertNotIn("@master", self.workflow)
         self.assertNotIn("@main", self.workflow)
 
@@ -220,7 +219,7 @@ class ListingContractTests(unittest.TestCase):
         normalized = " ".join(self.readme.split())
         for token in (
             "exact 40-character `releaseCommit`",
-            "never substituted for the pin",
+            "immutable source receipt",
             "does not use a bearer token",
             "not an HTTP deployment receipt",
             "no exact Git commit",

@@ -141,11 +141,15 @@ computes a number.
 
 ## Verification and deployment boundary
 
-Every push and pull request checks out the Undertow product repository at the exact
-40-character `releaseCommit` in `contract.json`. CI then derives the public/subscriber
-split, prompt inventory, protocol versions, server identity and registry manifest from
-that clean pinned checkout. A branch name or the current product-repository HEAD is
-never substituted for the pin.
+Every push and pull request validates the exact 40-character `releaseCommit` in
+`contract.json` against the immutable source receipt in `source-receipt.json`. The
+receipt binds that commit and contract to SHA-256 digests of the hosted implementation
+and registry manifest without granting this public repository access to the private
+product repository. A maintainer creates or updates the receipt only after running the
+local pinned-core verifier against a clean checkout; that verifier derives the
+public/subscriber split, prompt inventory, protocol versions, server identity and
+registry manifest directly from the source and checks both artifact digests. A branch
+name or current product-repository HEAD is never accepted as release provenance.
 
 A separate scheduled and manually dispatchable smoke makes anonymous, read-only calls
 to the listed endpoint. It initializes the legacy protocol, exercises modern discovery,
@@ -154,6 +158,7 @@ catalogs, then calls `agent_access_status`. It does not use a bearer token or ex
 subscriber tool. Run the same checks locally with:
 
     python3 -m unittest discover -s tests -v
+    python3 scripts/verify_core_pin.py --receipt
     python3 scripts/verify_core_pin.py --core /path/to/exact/core/checkout
     python3 scripts/smoke_live_mcp.py
 

@@ -25,24 +25,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Read the pinned Undertow core revision
-        id: core-pin
-        run: |
-          sha="$(python3 scripts/verify_core_pin.py --print-pin)"
-          echo "sha=$sha" >> "$GITHUB_OUTPUT"
-
-      - name: Check out the exact Undertow core revision
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: beepboop2025/liquilens-undertow
-          ref: ${{ steps.core-pin.outputs.sha }}
-          path: .core/liquilens-undertow
-          persist-credentials: false
-
-      - name: Verify listing and pinned-core contracts
+      - name: Verify listing and reviewed source receipt
         run: |
           python3 -m unittest discover -s tests -v
-          python3 scripts/verify_core_pin.py --core .core/liquilens-undertow
+          python3 scripts/verify_core_pin.py --receipt
 
   live-smoke:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
