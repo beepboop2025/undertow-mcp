@@ -11,8 +11,8 @@ This MCP 1.10.0 endpoint exposes 18 read-only tools, split into 10 public and 8 
 tools, plus 3 guided prompts. Its capability inventory is pinned to liquilens-undertow
 commit `9d1fedc28dca133fe6f9e018af1e381e247b8c9b`, the hosted implementation at
 `deploy/hetzner/undertow-mcp`. The stdio discovery server in
-`undertow_mm/mcp_server.py` 1.8.0 is a different eight-tool surface and is not
-this registry listing.
+`undertow_mm/mcp_server.py` is a separate discovery surface; it is neither
+this registry listing nor the public stdio adapter provided here.
 
 ## Add it
 
@@ -65,7 +65,7 @@ release does not create a Glama release. This repository does not claim a grade
 until Glama has actually rescanned and inspected it. See
 [Glama's release guide](https://glama.ai/blog/2026-03-15-how-to-make-a-release).
 
-## Protocol compatibility
+## Hosted protocol compatibility
 
 - `2026-07-28`: stateless requests use `server/discover`, per-request `_meta`,
   `MCP-Protocol-Version`, and mirrored `Mcp-Method` / `Mcp-Name` routing headers.
@@ -182,7 +182,7 @@ upstream contract is 1.10.0.
 
 ## Verification and deployment boundary
 
-Every push and pull request validates the exact 40-character `releaseCommit` in
+The verification workflow validates the exact 40-character `releaseCommit` in
 `contract.json` against the immutable source receipt in `source-receipt.json`. The
 receipt binds that commit and contract to SHA-256 digests of the hosted implementation
 and registry manifest without granting this public repository access to the private
