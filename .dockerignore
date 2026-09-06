@@ -1,0 +1,8 @@
+**
+!pyproject.toml
+!uv.lock
+!README.md
+!LICENSE
+!NOTICE.md
+!undertow_mcp_adapter/
+!undertow_mcp_adapter/**

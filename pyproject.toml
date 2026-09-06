@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling==1.32.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "undertow-mcp-adapter"
+version = "0.1.0"
+description = "Read-only stdio adapter for Undertow's hosted public MCP tools"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE.md"]
+dependencies = ["mcp==2.1.1", "httpx==0.28.1"]
+
+[project.scripts]
+undertow-mcp = "undertow_mcp_adapter:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["undertow_mcp_adapter"]

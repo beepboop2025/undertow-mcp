@@ -25,10 +25,17 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Install pinned Python environment manager
+        run: python3 -m pip install uv==0.10.0
+
       - name: Verify listing and reviewed source receipt
         run: |
-          python3 -m unittest discover -s tests -v
+          uv run --locked python -m unittest discover -s tests -v
+          uv run --locked python scripts/smoke_stdio.py --offline
           python3 scripts/verify_core_pin.py --receipt
+
+      - name: Build the public stdio adapter
+        run: docker build --tag undertow-mcp:verify .
 
   live-smoke:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
