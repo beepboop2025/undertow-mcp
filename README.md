@@ -7,12 +7,12 @@
 
 Undertow exposes estimated exit cost by position size and venue, the concentration of
 quoted depth, realized depth-collapse episodes, and liquidity tiers across market segments.
-This MCP 1.9.0 endpoint exposes 17 read-only tools, split into 9 public and 8 subscriber
+This MCP 1.10.0 endpoint exposes 18 read-only tools, split into 10 public and 8 subscriber
 tools, plus 3 guided prompts. Its capability inventory is pinned to liquilens-undertow
-commit `1e68d93d27e2a6d572c1b17ccf50e36d1d2b869b`, the hosted implementation at
+commit `9d1fedc28dca133fe6f9e018af1e381e247b8c9b`, the hosted implementation at
 `deploy/hetzner/undertow-mcp`. The stdio discovery server in
-`undertow_mm/mcp_server.py` 1.8.0 is a different eight-tool surface and is not
-this registry listing.
+`undertow_mm/mcp_server.py` is a separate discovery surface; it is neither
+this registry listing nor the public stdio adapter provided here.
 
 ## Add it
 
@@ -23,16 +23,55 @@ Claude Code:
 Claude.ai / ChatGPT / Cursor: add a custom connector or MCP server with the URL above.
 No key and no wallet for the free surface.
 
-This repository is the discovery and documentation mirror. The official registry serves
-[`io.github.beepboop2025/undertow` version 1.9.0](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.beepboop2025%2Fundertow/versions/latest).
+This repository contains the discovery manifest, documentation and an optional
+anonymous stdio adapter for the hosted service. The official registry serves
+[`io.github.beepboop2025/undertow` version 1.10.0](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.beepboop2025%2Fundertow/versions/latest).
 
-## Protocol compatibility
+## Local stdio and container installation
+
+The direct hosted URL above remains the simplest connection. For clients that
+require stdio, clone this repository at a reviewed commit and use Python 3.12+
+and [uv](https://docs.astral.sh/uv/):
+
+```sh
+uv sync --locked
+uv run --locked undertow-mcp
+```
+
+A Claude Desktop configuration can use `uv` as its command and
+`["run", "--directory", "/absolute/path/to/undertow-mcp", "--locked", "undertow-mcp"]`
+as its arguments. The stdio adapter exposes only the 10 anonymous tools and
+three prompts; subscriber access uses the direct hosted URL instead.
+
+For Docker and Glama's container build:
+
+```sh
+docker build -t undertow-mcp .
+docker run --rm -i undertow-mcp
+```
+
+The root Dockerfile runs as an unprivileged user and starts stdio directly.
+No API key, bearer token, wallet, port, volume or environment setting is needed.
+Outbound HTTPS access to the fixed `api.seiche.info` endpoint is required.
+Redirects, environment proxies and arbitrary upstream URLs are disabled.
+Requests are capped at 64 KiB, responses at 2 MiB, and each upstream operation
+at 10 seconds including queue wait. No automatic retries or response cache can
+hide outages or spend a quota twice. Upstream version/catalog drift fails closed.
+Tool results, native `isError` values and rights refusals are preserved.
+
+A Glama maintainer can configure the root Dockerfile, complete its build test,
+and publish a Glama release from the listing's admin page. A GitHub commit or
+release does not create a Glama release. This repository does not claim a grade
+until Glama has actually rescanned and inspected it. See
+[Glama's release guide](https://glama.ai/blog/2026-03-15-how-to-make-a-release).
+
+## Hosted protocol compatibility
 
 - `2026-07-28`: stateless requests use `server/discover`, per-request `_meta`,
   `MCP-Protocol-Version`, and mirrored `Mcp-Method` / `Mcp-Name` routing headers.
 - `2025-11-25`, `2025-06-18`, and `2025-03-26`: retained legacy initialization,
   tools, prompts, notifications, batching, and ping behavior.
-- Discovery identifies all nine public and eight subscriber tools. Anonymous
+- Discovery identifies all ten public and eight subscriber tools. Anonymous
   `tools/list` returns only the public inventory; entitlement is checked fresh on every
   subscriber request.
 - `resources/list` and `resources/templates/list` return explicit empty catalogs.
@@ -66,6 +105,7 @@ the estimate.
 | `liquidity_tiers` | A liquidity tier per market segment (UST, IG, HY, equities, ETF, FX, China basin, crypto) with the funding-stress overlay | free |
 | `sealed_record` | The sealed forward-calls record, hash-chained and signed before outcomes, misses kept | free |
 | `tide_clock` | Clock-phase liquidity map and exit-cost-by-phase for BTC or ETH perpetuals | subscriber |
+| `trade_safety_exit_context` | Exact-rung BTC/USD sell context with request, PIT, rights, clock and depth checks; unavailable inputs remain unavailable, never order clearance | free |
 | `unwind_stress` | Full institutional unwind and forced-sale stress pack | subscriber |
 | `unwind_watch` | Banded public watch over institutional unwind time and forced-sale pressure, with exact sensitive quantities withheld | free |
 | `venue_concentration` | The BTC depth backbone: top venue share of aggregate depth, HHI, effective venue count, per-venue depth in USD | free |
@@ -136,12 +176,13 @@ This repo is the **listing**: a README and the two manifests that let directorie
 describe the server accurately. The server itself is hosted at the endpoint above;
 its source is `deploy/hetzner/undertow-mcp` in the
 [Undertow product repository](https://github.com/beepboop2025/liquilens-undertow)
-and the registry target remains hosted 1.9.0. Nothing in this listing repo
-computes a number.
+and the registry target remains hosted 1.10.0. The adapter forwards the native public schemas and results without computing
+market values or granting subscriber access. Its own version is 0.1.0; the
+upstream contract is 1.10.0.
 
 ## Verification and deployment boundary
 
-Every push and pull request validates the exact 40-character `releaseCommit` in
+The verification workflow validates the exact 40-character `releaseCommit` in
 `contract.json` against the immutable source receipt in `source-receipt.json`. The
 receipt binds that commit and contract to SHA-256 digests of the hosted implementation
 and registry manifest without granting this public repository access to the private
@@ -157,7 +198,7 @@ checks the public tools, subscriber advertisement, prompts and explicit empty re
 catalogs, then calls `agent_access_status`. It does not use a bearer token or exercise a
 subscriber tool. Run the same checks locally with:
 
-    python3 -m unittest discover -s tests -v
+    uv run --locked python -m unittest discover -s tests -v
     python3 scripts/verify_core_pin.py --receipt
     python3 scripts/verify_core_pin.py --core /path/to/exact/core/checkout
     python3 scripts/smoke_live_mcp.py
@@ -182,3 +223,10 @@ receipt (or an equivalent authenticated SHA attestation) first.
 
 Human front door: [liquilens-undertow.com](https://liquilens-undertow.com) and the
 [Telegram desk](https://t.me/undertow_LiquiLens_bot).
+
+## License
+
+The original public integration code and documentation in this repository are
+[MIT licensed](LICENSE). See [NOTICE.md](NOTICE.md) for scope: this grant does
+not cover the private Undertow service or third-party market data. Native
+access controls, evidence limitations and source-rights holds still apply.
