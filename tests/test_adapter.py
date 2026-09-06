@@ -133,6 +133,42 @@ class AdapterTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(client.client.follow_redirects)
         self.assertFalse(client.client.trust_env)
 
+    async def test_set_cookie_cannot_add_credentials_to_later_rpc(self):
+        seen = []
+
+        def handler(req):
+            seen.append(req)
+            return response(
+                native({"content": [], "isError": False}),
+                headers={
+                    "Content-Type": "application/json",
+                    "Set-Cookie": "session=forbidden; Path=/; Secure; HttpOnly",
+                },
+            )
+
+        client = await self.client(handler)
+        await client.rpc("tools/call", {"name": "agent_access_status", "arguments": {}})
+        await client.rpc("tools/call", {"name": "agent_access_status", "arguments": {}})
+        self.assertEqual(len(seen), 2)
+        for request in seen:
+            self.assertNotIn("cookie", request.headers)
+            self.assertNotIn("authorization", request.headers)
+        self.assertEqual(len(client.client.cookies), 0)
+
+    async def test_nested_overflow_exponent_is_not_evidence(self):
+        for token in ("1e999", "-1e999"):
+            raw = (
+                '{"jsonrpc":"2.0","id":1,"result":'
+                '{"content":[],"isError":false,"structuredContent":'
+                '{"nested":{"cost":' + token + "}}}}"
+            ).encode()
+            client = await self.client(lambda req: response(None, raw=raw))
+            with self.subTest(token=token), self.assertRaises(MCPError) as caught:
+                await client.call_tool(
+                    None, types.CallToolRequestParams(name="exit_cost", arguments={})
+                )
+            self.assertEqual(caught.exception.message, "upstream_json_invalid")
+
     async def test_unknown_subscriber_and_task_requests_never_reach_network(self):
         seen = []
         client = await self.client(lambda req: seen.append(req))

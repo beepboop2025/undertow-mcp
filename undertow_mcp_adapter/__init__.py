@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import asyncio
 import json
+import math
+from http.cookiejar import CookieJar, DefaultCookiePolicy
 from importlib.resources import files
 from typing import Any
 
@@ -47,7 +49,25 @@ def _strict_json(body: bytes) -> Any:
     def invalid(_value: str) -> None:
         raise ValueError("nonfinite_json_number")
 
-    return json.loads(body, object_pairs_hook=pairs, parse_constant=invalid)
+    def finite_float(value: str) -> float:
+        parsed = float(value)
+        if not math.isfinite(parsed):
+            raise ValueError("nonfinite_json_number")
+        return parsed
+
+    return json.loads(
+        body, object_pairs_hook=pairs, parse_constant=invalid, parse_float=finite_float
+    )
+
+
+class _NoCookies(DefaultCookiePolicy):
+    """A remote response must never add credentials to the anonymous lane."""
+
+    def set_ok(self, cookie: Any, request: Any) -> bool:
+        return False
+
+    def return_ok(self, cookie: Any, request: Any) -> bool:
+        return False
 
 
 class HostedPublicClient:
@@ -56,6 +76,7 @@ class HostedPublicClient:
     def __init__(self, *, transport: httpx.AsyncBaseTransport | None = None) -> None:
         self.client = httpx.AsyncClient(
             transport=transport,
+            cookies=CookieJar(policy=_NoCookies()),
             follow_redirects=False,
             trust_env=False,
             timeout=httpx.Timeout(TIMEOUT_SECONDS),
