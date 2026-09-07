@@ -2,6 +2,12 @@
 
 **Endpoint:** `https://api.seiche.info/undertow/mcp` (streamable HTTP, no install)
 
+**Start with a question:** [Compare BTC exit estimates in your browser](https://liquilens.in/start/?task=exit).
+Choose a dollar size and click to read the current published venue estimates,
+snapshot date and method. No account, key, wallet or client installation is
+needed for this example. The result is a depth-based estimate, not an executable
+quote. The same page provides Codex, Claude Code, Cursor and VS Code setup.
+
 **Try it live:** [liquilens-undertow.com/developers](https://liquilens-undertow.com/developers/) ·
 **API catalog:** [api.seiche.info/undertow](https://api.seiche.info/undertow/)
 
