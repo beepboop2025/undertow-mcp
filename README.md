@@ -13,9 +13,9 @@ quote. The same page provides Codex, Claude Code, Cursor and VS Code setup.
 
 Undertow exposes estimated exit cost by position size and venue, the concentration of
 quoted depth, realized depth-collapse episodes, and liquidity tiers across market segments.
-This MCP 1.10.0 endpoint exposes 18 read-only tools, split into 10 public and 8 subscriber
+This MCP 1.10.0 endpoint exposes 19 read-only tools, split into 11 public and 8 subscriber
 tools, plus 3 guided prompts. Its capability inventory is pinned to liquilens-undertow
-commit `9d1fedc28dca133fe6f9e018af1e381e247b8c9b`, the hosted implementation at
+commit `e472d8862f6317fe5a28ad9a33c093a22d14590a`, the hosted implementation at
 `deploy/hetzner/undertow-mcp`. The stdio discovery server in
 `undertow_mm/mcp_server.py` is a separate discovery surface; it is neither
 this registry listing nor the public stdio adapter provided here.
@@ -46,7 +46,7 @@ uv run --locked undertow-mcp
 
 A Claude Desktop configuration can use `uv` as its command and
 `["run", "--directory", "/absolute/path/to/undertow-mcp", "--locked", "undertow-mcp"]`
-as its arguments. The stdio adapter exposes only the 10 anonymous tools and
+as its arguments. The stdio adapter exposes only the 11 anonymous tools and
 three prompts; subscriber access uses the direct hosted URL instead.
 
 For Docker and Glama's container build:
@@ -77,7 +77,7 @@ until Glama has actually rescanned and inspected it. See
   `MCP-Protocol-Version`, and mirrored `Mcp-Method` / `Mcp-Name` routing headers.
 - `2025-11-25`, `2025-06-18`, and `2025-03-26`: retained legacy initialization,
   tools, prompts, notifications, batching, and ping behavior.
-- Discovery identifies all ten public and eight subscriber tools. Anonymous
+- Discovery identifies all eleven public and eight subscriber tools. Anonymous
   `tools/list` returns only the public inventory; entitlement is checked fresh on every
   subscriber request.
 - `resources/list` and `resources/templates/list` return explicit empty catalogs.
@@ -109,6 +109,7 @@ the estimate.
 | `household_credit` | Whether funding stress is reaching household balance sheets | subscriber |
 | `latest_article` | The exact reviewed daily market-liquidity editorial with its evidence clock and publication authority | free |
 | `liquidity_tiers` | A liquidity tier per market segment (UST, IG, HY, equities, ETF, FX, China basin, crypto) with the funding-stress overlay | free |
+| `research_network` | Bounded Palimpsest and Seiche research discovery with source clocks, availability and no blended score | free |
 | `sealed_record` | The sealed forward-calls record, hash-chained and signed before outcomes, misses kept | free |
 | `tide_clock` | Clock-phase liquidity map and exit-cost-by-phase for BTC or ETH perpetuals | subscriber |
 | `trade_safety_exit_context` | Exact-rung BTC/USD sell context with request, PIT, rights, clock and depth checks; unavailable inputs remain unavailable, never order clearance | free |
