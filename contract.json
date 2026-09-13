@@ -1,6 +1,6 @@
 {
   "canonical": {
-    "releaseCommit": "9d1fedc28dca133fe6f9e018af1e381e247b8c9b",
+    "releaseCommit": "e472d8862f6317fe5a28ad9a33c093a22d14590a",
     "implementationRepository": "https://github.com/beepboop2025/liquilens-undertow",
     "listingRepository": "https://github.com/beepboop2025/undertow-mcp"
   },
@@ -17,6 +17,7 @@
     "exit_cost",
     "latest_article",
     "liquidity_tiers",
+    "research_network",
     "sealed_record",
     "trade_safety_exit_context",
     "unwind_watch",
