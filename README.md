@@ -29,6 +29,12 @@ Claude Code:
 Claude.ai / ChatGPT / Cursor: add a custom connector or MCP server with the URL above.
 No key and no wallet for the free surface.
 
+The [free agent starter kit](https://liquilens.in/agents/) connects Undertow exit
+estimates and venue concentration with Seiche funding context and LiquiLens bank
+evidence. Follow the [Hermes](https://liquilens.in/agents/hermes/) or
+[OpenClaw](https://liquilens.in/agents/openclaw/) guide for the shared setup. It uses
+public tools under fair-use limits; model-provider costs remain separate.
+
 This repository contains the discovery manifest, documentation and an optional
 anonymous stdio adapter for the hosted service. The official registry serves
 [`io.github.beepboop2025/undertow` version 1.10.0](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.beepboop2025%2Fundertow/versions/latest).
