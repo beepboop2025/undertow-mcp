@@ -1,10 +1,10 @@
 {
   "canonical": {
-    "releaseCommit": "e472d8862f6317fe5a28ad9a33c093a22d14590a",
+    "releaseCommit": "da3ffe733ca27eb424c44e688a72710e11e91fa5",
     "implementationRepository": "https://github.com/beepboop2025/liquilens-undertow",
     "listingRepository": "https://github.com/beepboop2025/undertow-mcp"
   },
-  "serverVersion": "1.10.0",
+  "serverVersion": "1.10.1",
   "protocolVersions": [
     "2026-07-28",
     "2025-11-25",

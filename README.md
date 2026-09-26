@@ -13,12 +13,14 @@ quote. The same page provides Codex, Claude Code, Cursor and VS Code setup.
 
 Undertow exposes estimated exit cost by position size and venue, the concentration of
 quoted depth, realized depth-collapse episodes, and liquidity tiers across market segments.
-This MCP 1.10.0 endpoint exposes 19 read-only tools, split into 11 public and 8 subscriber
+This MCP 1.10.1 endpoint exposes 19 read-only tools, split into 11 public and 8 subscriber
 tools, plus 3 guided prompts. Its capability inventory is pinned to liquilens-undertow
-commit `e472d8862f6317fe5a28ad9a33c093a22d14590a`, the hosted implementation at
+commit `da3ffe733ca27eb424c44e688a72710e11e91fa5`, the hosted implementation at
 `deploy/hetzner/undertow-mcp`. The stdio discovery server in
 `undertow_mm/mcp_server.py` is a separate discovery surface; it is neither
 this registry listing nor the public stdio adapter provided here.
+
+The `liquidity_tiers` result includes public measure counts, replay eligibility and the published reason a score is withheld. A PARTIAL tier can remain even when every measure qualifies. [Settlement histories and source receipts](https://liquilens.in/agents/#source-data) are available through the separate source-data MCP.
 
 ## Add it
 
@@ -37,7 +39,7 @@ public tools under fair-use limits; model-provider costs remain separate.
 
 This repository contains the discovery manifest, documentation and an optional
 anonymous stdio adapter for the hosted service. The official registry serves
-[`io.github.beepboop2025/undertow` version 1.10.0](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.beepboop2025%2Fundertow/versions/latest).
+[`io.github.beepboop2025/undertow` version 1.10.1](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.beepboop2025%2Fundertow/versions/latest).
 
 ## Local stdio and container installation
 
@@ -189,9 +191,9 @@ This repo is the **listing**: a README and the two manifests that let directorie
 describe the server accurately. The server itself is hosted at the endpoint above;
 its source is `deploy/hetzner/undertow-mcp` in the
 [Undertow product repository](https://github.com/beepboop2025/liquilens-undertow)
-and the registry target remains hosted 1.10.0. The adapter forwards the native public schemas and results without computing
+and the registry target remains hosted 1.10.1. The adapter forwards the native public schemas and results without computing
 market values or granting subscriber access. Its own version is 0.1.0; the
-upstream contract is 1.10.0.
+upstream contract is 1.10.1.
 
 ## Verification and deployment boundary
 
