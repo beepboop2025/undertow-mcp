@@ -3,7 +3,7 @@
   "name": "io.github.beepboop2025/undertow",
   "title": "Undertow market liquidity and exit-cost tools",
   "description": "Daily exit context, depth, tiers, and sealed records. No commodity futures or execution authority.",
-  "version": "1.10.1",
+  "version": "1.11.0",
   "repository": {
     "url": "https://github.com/beepboop2025/undertow-mcp",
     "source": "github"
