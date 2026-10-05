@@ -2,6 +2,17 @@
 
 **Endpoint:** `https://api.seiche.info/undertow/mcp` (streamable HTTP, no install)
 
+Undertow is the market-liquidity product of **LIQUILENS PRIVATE LIMITED**, a
+registered company in India (CIN **U62011RJ2026PTC116792**). One company, three
+connected financial-evidence products: LiquiLens investigates institutions,
+Seiche explains funding conditions, and Undertow examines market exit evidence.
+Together they support a review of an exposure from institution to funding to
+liquidity, with each source date, coverage gap and research limit retained.
+
+Built for people and AI agents working internationally. Access is global;
+coverage is market-specific. Read the [company and investor story](https://liquilens.in/investors/)
+or inspect the [shared company profile](https://liquilens.in/company-profile.json).
+
 **Start with a question:** [Open the crypto workbench](https://liquilens-undertow.com/crypto/).
 Choose a dollar size and click to read the current published venue estimates,
 snapshot date and method. No account, key, wallet or client installation is
@@ -13,9 +24,9 @@ quote. The same page provides Codex, Claude Code, Cursor and VS Code setup.
 
 Undertow exposes estimated exit cost by position size and venue, the concentration of
 quoted depth, realized depth-collapse episodes, and liquidity tiers across market segments.
-This MCP 1.11.0 endpoint exposes 22 read-only tools, split into 14 public and 8 subscriber
+This MCP 1.13.0 endpoint exposes 24 read-only tools, split into 16 public and 8 subscriber
 tools, plus 3 guided prompts. Its capability inventory is pinned to liquilens-undertow
-commit `82d74bad2574d61cf9a602dd2cdf3a9232641669`, the hosted implementation at
+commit `f103a9929a438f92964e7254edd7553c5a4dfe3a`, the hosted implementation at
 `deploy/hetzner/undertow-mcp`. The stdio discovery server in
 `undertow_mm/mcp_server.py` is a separate discovery surface; it is neither
 this registry listing nor the public stdio adapter provided here.
@@ -39,7 +50,7 @@ public tools under fair-use limits; model-provider costs remain separate.
 
 This repository contains the discovery manifest, documentation and an optional
 anonymous stdio adapter for the hosted service. The official registry serves
-[`io.github.beepboop2025/undertow` version 1.11.0](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.beepboop2025%2Fundertow/versions/latest).
+[`io.github.beepboop2025/undertow` version 1.13.0](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.beepboop2025%2Fundertow/versions/latest).
 
 ## Local stdio and container installation
 
@@ -54,7 +65,7 @@ uv run --locked undertow-mcp
 
 A Claude Desktop configuration can use `uv` as its command and
 `["run", "--directory", "/absolute/path/to/undertow-mcp", "--locked", "undertow-mcp"]`
-as its arguments. The stdio adapter exposes only the 14 anonymous tools and
+as its arguments. The stdio adapter exposes only the 16 anonymous tools and
 three prompts; subscriber access uses the direct hosted URL instead.
 
 For Docker and Glama's container build:
@@ -85,7 +96,7 @@ until Glama has actually rescanned and inspected it. See
   `MCP-Protocol-Version`, and mirrored `Mcp-Method` / `Mcp-Name` routing headers.
 - `2025-11-25`, `2025-06-18`, and `2025-03-26`: retained legacy initialization,
   tools, prompts, notifications, batching, and ping behavior.
-- Discovery identifies all fourteen public and eight subscriber tools. Anonymous
+- Discovery identifies all sixteen public and eight subscriber tools. Anonymous
   `tools/list` returns only the public inventory; entitlement is checked fresh on every
   subscriber request.
 - `resources/list` and `resources/templates/list` return explicit empty catalogs.
@@ -123,9 +134,11 @@ The [crypto agent kit](https://liquilens-undertow.com/crypto/undertow-crypto-kit
 | `exit_cost` | Per-venue sell cost in basis points at the nearest published size rung, cheapest and dearest venue with approximate dollar cost, and the venue spread | free |
 | `exit_desk_full` | BTC and ETH at every published rung, plus the venue-failure withdrawal scenario | subscriber |
 | `exit_schedule` | Position-sized hour-by-hour liquidation schedule beside immediate and TWAP baselines | subscriber |
+| `gold_cash_realisation` | Caller-input gold sale and FX scenario with separate quote, settlement, access and pledge gates; no verified balance or executable quote | free |
 | `household_credit` | Whether funding stress is reaching household balance sheets | subscriber |
 | `latest_article` | The exact reviewed daily market-liquidity editorial with its evidence clock and publication authority | free |
 | `liquidity_tiers` | A liquidity tier per market segment (UST, IG, HY, equities, ETF, FX, China basin, crypto) with the funding-stress overlay | free |
+| `market_corpus_context` | Seiche corpus counts, rights and clocks, with bounded metadata pages; retrieval is not source-observation freshness | free |
 | `research_network` | Bounded Palimpsest and Seiche research discovery with source clocks, availability and no blended score | free |
 | `sealed_record` | The sealed forward-calls record, hash-chained and signed before outcomes, misses kept | free |
 | `tide_clock` | Clock-phase liquidity map and exit-cost-by-phase for BTC or ETH perpetuals | subscriber |
@@ -198,9 +211,9 @@ This repo is the **listing**: a README and the two manifests that let directorie
 describe the server accurately. The server itself is hosted at the endpoint above;
 its source is `deploy/hetzner/undertow-mcp` in the
 [Undertow product repository](https://github.com/beepboop2025/liquilens-undertow)
-and the registry target remains hosted 1.11.0. The adapter forwards the native public schemas and results without computing
-market values or granting subscriber access. Its own version is 0.1.0; the
-upstream contract is 1.11.0.
+and the registry target remains hosted 1.13.0. The adapter forwards the native public schemas and results without computing
+market values or granting subscriber access. Its own version is 0.2.0; the
+upstream contract is 1.13.0.
 
 ## Verification and deployment boundary
 
