@@ -17,12 +17,15 @@ from mcp.shared.exceptions import MCPError
 
 ENDPOINT = "https://api.seiche.info/undertow/mcp"
 PROTOCOL = "2026-07-28"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 MAX_REQUEST_BYTES = 64 * 1024
 MAX_RESPONSE_BYTES = 2 * 1024 * 1024
 TIMEOUT_SECONDS = 10.0
 CONTRACT = json.loads(files(__package__).joinpath("contract.json").read_text())
 INSTRUCTIONS = (
+    "LIQUILENS PRIVATE LIMITED, a registered company in India. "
+    "LiquiLens institutions, Seiche funding and Undertow market liquidity: "
+    "https://liquilens.in/company-profile.json. "
     "Anonymous read-only access to Undertow's hosted public evidence. "
     "Use exit_cost for approximate nearest-rung snapshot estimates; use "
     "trade_safety_exit_context only for its exact BTC/USD sell evidence contract. "
