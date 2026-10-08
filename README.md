@@ -2,6 +2,8 @@
 
 **Endpoint:** `https://api.seiche.info/undertow/mcp` (streamable HTTP, no install)
 
+[![Undertow on AllMCPs](https://allmcps.com/api/badge/undertow-market-liquidity-map-2)](https://allmcps.com/mcp/undertow-market-liquidity-map-2?verify=2089e298-cdac-4926-8727-66e710e1c1fe)
+
 Undertow is the market-liquidity product of **LIQUILENS PRIVATE LIMITED**, a
 registered company in India (CIN **U62011RJ2026PTC116792**). One company, three
 connected financial-evidence products: LiquiLens investigates institutions,
@@ -47,6 +49,13 @@ estimates and venue concentration with Seiche funding context and LiquiLens bank
 evidence. Follow the [Hermes](https://liquilens.in/agents/hermes/) or
 [OpenClaw](https://liquilens.in/agents/openclaw/) guide for the shared setup. It uses
 public tools under fair-use limits; model-provider costs remain separate.
+
+For a recurring research workflow, use the [shared infrastructure setup guide](https://liquilens.in/agents/infrastructure/)
+and [current interface catalog](https://beepboop2025.github.io/financial-evidence-skills/agents/system.json).
+They distinguish the public research MCPs, the eight-tool Research Desk and
+optional private runtimes. Private paper assessment is a separate integration;
+Undertow's public tools do not submit orders. Source observation dates, data
+rights and eligibility remain explicit even when hosting and backups are healthy.
 
 This repository contains the discovery manifest, documentation and an optional
 anonymous stdio adapter for the hosted service. The official registry serves
