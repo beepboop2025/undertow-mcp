@@ -1,5 +1,27 @@
 # Undertow MCP | Market liquidity and exit-cost tools
 
+## Connect and ask one question
+
+Hosted Streamable HTTP MCP; no local server or API key for public read-only tools.
+Add the products you need to Claude Code:
+
+```sh
+claude mcp add --transport http undertow https://api.seiche.info/undertow/mcp
+claude mcp add --transport http liquilens https://api.liquilens.in/mcp
+claude mcp add --transport http seiche https://api.seiche.info/mcp
+```
+
+**Try this first:** What is the estimated exit cost for a $100,000 BTC sell? Compare available venues, snapshot times and excluded costs.
+
+[Try it in your browser](https://liquilens.in/start/?task=exit&size=100000) ·
+[Cursor configuration](https://liquilens.in/agents/cursor.json) ·
+[Codex commands](https://liquilens.in/agents/codex.txt) ·
+[Free three-product starter kit and skill](https://liquilens.in/agents/#connect)
+
+For a connected review, ask for institution evidence → funding context → BTC
+exit estimates, with each source date, coverage gap and limitation kept separate.
+Client/model costs and fair-use limits may apply. Research calls do not execute trades.
+
 **Endpoint:** `https://api.seiche.info/undertow/mcp` (streamable HTTP, no install)
 
 [![Undertow on AllMCPs](https://allmcps.com/api/badge/undertow-market-liquidity-map-2)](https://allmcps.com/mcp/undertow-market-liquidity-map-2?verify=2089e298-cdac-4926-8727-66e710e1c1fe)
