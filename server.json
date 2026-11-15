@@ -9,6 +9,15 @@
     "source": "github"
   },
   "websiteUrl": "https://liquilens-undertow.com",
+  "icons": [
+    {
+      "src": "https://liquilens.in/brand/liquilens-mark-512.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ]
+    }
+  ],
   "remotes": [
     {
       "type": "streamable-http",
