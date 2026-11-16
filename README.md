@@ -1,4 +1,4 @@
-# Undertow MCP | Market liquidity and exit-cost tools
+# LiquiLens Undertow MCP: market liquidity and exit-cost tools
 
 ## Connect and ask one question
 
@@ -240,8 +240,8 @@ never a dropped connection.
 
 This repo is the **listing**: a README and the two manifests that let directories
 describe the server accurately. The server itself is hosted at the endpoint above;
-its source is `deploy/hetzner/undertow-mcp` in the
-[Undertow product repository](https://github.com/beepboop2025/liquilens-undertow)
+its source is `deploy/hetzner/undertow-mcp` in the Undertow product repository
+`https://github.com/beepboop2025/liquilens-undertow` (private, so not linked here)
 and the registry target remains hosted 1.13.0. The adapter forwards the native public schemas and results without computing
 market values or granting subscriber access. Its own version is 0.2.0; the
 upstream contract is 1.13.0.
@@ -279,9 +279,9 @@ receipt (or an equivalent authenticated SHA attestation) first.
 
 ## Siblings from the same lab
 
-- [Seiche](https://api.seiche.info/mcp): US dollar funding stress.
-- [LiquiLens](https://api.liquilens.in/mcp): bank, NBFC and lender failure risk, and
-  whether that stress is reaching firms and households.
+- [Seiche](https://api.seiche.info/mcp): free, open research on dollar funding and money markets.
+- [LiquiLens](https://api.liquilens.in/mcp): source-cited data on India's small and midsize lenders, by web, API
+  and MCP.
 - [groundcheck](https://groundcheck.seiche.info): claim grounding and citation
   verification for general text.
 - [Palimpsest](https://api.seiche.info/palimpsest/mcp): live internet-censorship
