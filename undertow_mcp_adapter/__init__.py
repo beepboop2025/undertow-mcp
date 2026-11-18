@@ -17,7 +17,7 @@ from mcp.shared.exceptions import MCPError
 
 ENDPOINT = "https://api.seiche.info/undertow/mcp"
 PROTOCOL = "2026-07-28"
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 MAX_REQUEST_BYTES = 64 * 1024
 MAX_RESPONSE_BYTES = 2 * 1024 * 1024
 TIMEOUT_SECONDS = 10.0

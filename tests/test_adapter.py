@@ -28,7 +28,7 @@ def native(result):
         "_meta": {
             "io.modelcontextprotocol/serverInfo": {
                 "name": "undertow",
-                "version": "1.13.0",
+                "version": "1.14.0",
             }
         },
     }

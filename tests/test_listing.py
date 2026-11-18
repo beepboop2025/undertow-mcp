@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import unicodedata
 import unittest
 from pathlib import Path
 from typing import Any
@@ -9,6 +10,12 @@ from urllib.parse import urlparse
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def _dash_punctuation(text: str) -> list[str]:
+    """Unicode dash punctuation other than the ASCII hyphen-minus."""
+    return sorted({f"U+{ord(char):04X}" for char in text
+                   if char != "-" and unicodedata.category(char) == "Pd"})
 
 
 def _strict_json(path: Path) -> dict[str, Any]:
@@ -72,7 +79,7 @@ class ListingContractTests(unittest.TestCase):
             self.assertTrue(
                 all(re.fullmatch(r"[a-z][a-z0-9_]+", name) for name in names)
             )
-        self.assertEqual(len(self.contract["publicTools"]), 16)
+        self.assertEqual(len(self.contract["publicTools"]), 17)
         self.assertEqual(len(self.contract["subscriberTools"]), 8)
         self.assertEqual(len(self.contract["prompts"]), 3)
         self.assertEqual(self.contract["resourceTemplates"], [])
@@ -117,7 +124,7 @@ class ListingContractTests(unittest.TestCase):
             {name for name, surface in rows if surface == "subscriber"},
             set(self.contract["subscriberTools"]),
         )
-        self.assertEqual(len(rows), 24)
+        self.assertEqual(len(rows), 25)
         prompt_pattern = re.compile(
             r"^\| `([a-z][a-z0-9_]+)` \|", re.MULTILINE
         )
@@ -129,8 +136,8 @@ class ListingContractTests(unittest.TestCase):
         self.assertIn(f"MCP {self.contract['serverVersion']}", self.readme)
         for version in self.contract["protocolVersions"]:
             self.assertIn(version, self.readme)
-        self.assertIn("24 read-only tools", self.readme)
-        self.assertIn("16 public and 8 subscriber", self.readme)
+        self.assertIn("25 read-only tools", self.readme)
+        self.assertIn("17 public and 8 subscriber", self.readme)
         self.assertIn("3 guided prompts", self.readme)
         self.assertIn("PARTIAL is not calm", self.readme)
         self.assertIn("No executable quotes or trade authority", self.server["description"])
@@ -149,7 +156,7 @@ class ListingContractTests(unittest.TestCase):
             "verify_record_howto",
         }
 
-        self.assertEqual(version, "1.13.0")
+        self.assertEqual(version, "1.14.0")
         self.assertEqual(self.server["version"], version)
         self.assertIn(pin, self.readme)
         self.assertIn("deploy/hetzner/undertow-mcp", self.readme)
@@ -189,6 +196,41 @@ class ListingContractTests(unittest.TestCase):
         self.assertEqual(self.glama["maintainers"], ["beepboop2025"])
         self.assertNotIn("version", self.glama)
         self.assertNotIn("tools", self.glama)
+
+    def test_registry_display_metadata_is_plain_and_first_party(self) -> None:
+        # GitHub's MCP Registry, VS Code and other directories show the title,
+        # description and icons. Undertow serves no mark of its own yet, so the
+        # card uses the LiquiLens company mark ("LiquiLens Undertow").
+        for field in ("title", "description"):
+            with self.subTest(field=field):
+                self.assertEqual(_dash_punctuation(self.server[field]), [])
+        self.assertEqual(
+            self.server["icons"],
+            [{
+                "src": "https://liquilens.in/brand/liquilens-mark-512.png",
+                "mimeType": "image/png",
+                "sizes": ["512x512"],
+            }],
+        )
+        for icon in self.server["icons"]:
+            parsed = urlparse(icon["src"])
+            self.assertEqual(parsed.scheme, "https")
+            self.assertIn(parsed.netloc, {"liquilens.in", "liquilens-undertow.com"})
+            self.assertEqual(parsed.query + parsed.fragment, "")
+            self.assertLessEqual(len(icon["src"]), 255)
+            self.assertIn(icon["mimeType"], {"image/png", "image/jpeg", "image/webp"})
+            for size in icon["sizes"]:
+                self.assertRegex(size, r"^[1-9][0-9]{0,4}x[1-9][0-9]{0,4}$")
+
+    def test_shipped_listing_text_has_no_dash_punctuation(self) -> None:
+        # GitHub's MCP Registry and VS Code show this README as the server page.
+        paths = sorted(ROOT.glob("*.md"), key=lambda path: path.name)
+        self.assertIn(ROOT / "README.md", paths)
+        for path in paths:
+            with self.subTest(path=path.name):
+                self.assertEqual(
+                    _dash_punctuation(path.read_text(encoding="utf-8")), []
+                )
 
     def test_secondary_registry_metadata_is_minimal(self) -> None:
         self.assertEqual(
