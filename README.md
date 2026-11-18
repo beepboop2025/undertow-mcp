@@ -48,9 +48,9 @@ quote. The same page provides Codex, Claude Code, Cursor and VS Code setup.
 
 Undertow exposes estimated exit cost by position size and venue, the concentration of
 quoted depth, realized depth-collapse episodes, and liquidity tiers across market segments.
-This MCP 1.13.0 endpoint exposes 24 read-only tools, split into 16 public and 8 subscriber
+This MCP 1.14.0 endpoint exposes 25 read-only tools, split into 17 public and 8 subscriber
 tools, plus 3 guided prompts. Its capability inventory is pinned to liquilens-undertow
-commit `f103a9929a438f92964e7254edd7553c5a4dfe3a`, the hosted implementation at
+commit `43423bba6d0a0efdee87c1188c4a4d84b4af1938`, the hosted implementation at
 `deploy/hetzner/undertow-mcp`. The stdio discovery server in
 `undertow_mm/mcp_server.py` is a separate discovery surface; it is neither
 this registry listing nor the public stdio adapter provided here.
@@ -81,7 +81,7 @@ rights and eligibility remain explicit even when hosting and backups are healthy
 
 This repository contains the discovery manifest, documentation and an optional
 anonymous stdio adapter for the hosted service. The official registry serves
-[`io.github.beepboop2025/undertow` version 1.13.0](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.beepboop2025%2Fundertow/versions/latest).
+[`io.github.beepboop2025/undertow` version 1.14.0](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.beepboop2025%2Fundertow/versions/latest).
 
 ## Local stdio and container installation
 
@@ -162,6 +162,7 @@ The [crypto agent kit](https://liquilens-undertow.com/crypto/undertow-crypto-kit
 | `crypto_portfolio_stress` | Apply caller-supplied price shocks and costs to linear exposures; show equity and gross asset/venue concentration | free |
 | `depth_episodes` | Realized depth-collapse episodes with onset, trough, drawdown and recovery, against thresholds declared before any episode accrued | free |
 | `divergence_status` | Compact comparison of corporate and household transmission regimes | subscriber |
+| `exit_atlas` | The hourly Exit Atlas (how much can leave, through which door, at what cost): first-party stablecoin supply by chain and the venue depeg flag against par, exit doors, the dollar curve against SOFR, chain fees and exchange reserves, with no aggregator index as an input | free |
 | `exit_cost` | Per-venue sell cost in basis points at the nearest published size rung, cheapest and dearest venue with approximate dollar cost, and the venue spread | free |
 | `exit_desk_full` | BTC and ETH at every published rung, plus the venue-failure withdrawal scenario | subscriber |
 | `exit_schedule` | Position-sized hour-by-hour liquidation schedule beside immediate and TWAP baselines | subscriber |
@@ -242,9 +243,9 @@ This repo is the **listing**: a README and the two manifests that let directorie
 describe the server accurately. The server itself is hosted at the endpoint above;
 its source is `deploy/hetzner/undertow-mcp` in the Undertow product repository
 `https://github.com/beepboop2025/liquilens-undertow` (private, so not linked here)
-and the registry target remains hosted 1.13.0. The adapter forwards the native public schemas and results without computing
-market values or granting subscriber access. Its own version is 0.2.0; the
-upstream contract is 1.13.0.
+and the registry target remains hosted 1.14.0. The adapter forwards the native public schemas and results without computing
+market values or granting subscriber access. Its own version is 0.3.0; the
+upstream contract is 1.14.0.
 
 ## Verification and deployment boundary
 

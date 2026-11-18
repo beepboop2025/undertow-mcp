@@ -79,7 +79,7 @@ class ListingContractTests(unittest.TestCase):
             self.assertTrue(
                 all(re.fullmatch(r"[a-z][a-z0-9_]+", name) for name in names)
             )
-        self.assertEqual(len(self.contract["publicTools"]), 16)
+        self.assertEqual(len(self.contract["publicTools"]), 17)
         self.assertEqual(len(self.contract["subscriberTools"]), 8)
         self.assertEqual(len(self.contract["prompts"]), 3)
         self.assertEqual(self.contract["resourceTemplates"], [])
@@ -124,7 +124,7 @@ class ListingContractTests(unittest.TestCase):
             {name for name, surface in rows if surface == "subscriber"},
             set(self.contract["subscriberTools"]),
         )
-        self.assertEqual(len(rows), 24)
+        self.assertEqual(len(rows), 25)
         prompt_pattern = re.compile(
             r"^\| `([a-z][a-z0-9_]+)` \|", re.MULTILINE
         )
@@ -136,8 +136,8 @@ class ListingContractTests(unittest.TestCase):
         self.assertIn(f"MCP {self.contract['serverVersion']}", self.readme)
         for version in self.contract["protocolVersions"]:
             self.assertIn(version, self.readme)
-        self.assertIn("24 read-only tools", self.readme)
-        self.assertIn("16 public and 8 subscriber", self.readme)
+        self.assertIn("25 read-only tools", self.readme)
+        self.assertIn("17 public and 8 subscriber", self.readme)
         self.assertIn("3 guided prompts", self.readme)
         self.assertIn("PARTIAL is not calm", self.readme)
         self.assertIn("No executable quotes or trade authority", self.server["description"])
@@ -156,7 +156,7 @@ class ListingContractTests(unittest.TestCase):
             "verify_record_howto",
         }
 
-        self.assertEqual(version, "1.13.0")
+        self.assertEqual(version, "1.14.0")
         self.assertEqual(self.server["version"], version)
         self.assertIn(pin, self.readme)
         self.assertIn("deploy/hetzner/undertow-mcp", self.readme)
