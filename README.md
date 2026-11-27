@@ -48,9 +48,9 @@ quote. The same page provides Codex, Claude Code, Cursor and VS Code setup.
 
 Undertow exposes estimated exit cost by position size and venue, the concentration of
 quoted depth, realized depth-collapse episodes, and liquidity tiers across market segments.
-This MCP 1.14.0 endpoint exposes 25 read-only tools, split into 17 public and 8 subscriber
+This MCP 1.14.1 endpoint exposes 25 read-only tools, split into 17 public and 8 subscriber
 tools, plus 3 guided prompts. Its capability inventory is pinned to liquilens-undertow
-commit `43423bba6d0a0efdee87c1188c4a4d84b4af1938`, the hosted implementation at
+commit `a04c779f7fc20b91d3d8003b08920a303a23354b`, the hosted implementation at
 `deploy/hetzner/undertow-mcp`. The stdio discovery server in
 `undertow_mm/mcp_server.py` is a separate discovery surface; it is neither
 this registry listing nor the public stdio adapter provided here.
@@ -81,7 +81,7 @@ rights and eligibility remain explicit even when hosting and backups are healthy
 
 This repository contains the discovery manifest, documentation and an optional
 anonymous stdio adapter for the hosted service. The official registry serves
-[`io.github.beepboop2025/undertow` version 1.14.0](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.beepboop2025%2Fundertow/versions/latest).
+[`io.github.beepboop2025/undertow` version 1.14.1](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.beepboop2025%2Fundertow/versions/latest).
 
 ## Local stdio and container installation
 
@@ -127,7 +127,7 @@ until Glama has actually rescanned and inspected it. See
   `MCP-Protocol-Version`, and mirrored `Mcp-Method` / `Mcp-Name` routing headers.
 - `2025-11-25`, `2025-06-18`, and `2025-03-26`: retained legacy initialization,
   tools, prompts, notifications, batching, and ping behavior.
-- Discovery identifies all sixteen public and eight subscriber tools. Anonymous
+- Discovery identifies all seventeen public and eight subscriber tools. Anonymous
   `tools/list` returns only the public inventory; entitlement is checked fresh on every
   subscriber request.
 - `resources/list` and `resources/templates/list` return explicit empty catalogs.
@@ -213,8 +213,13 @@ Research and market data, not investment advice.
 
 ## Subscriber tier
 
-The Agent and Desk tiers unlock the eight subscriber tools. Send `/agent` to the
-[Telegram bot](https://t.me/undertow_LiquiLens_bot) to mint a bearer token:
+The Agent tier ($99/mo) and the Desk tier ($199/mo) unlock the eight subscriber tools
+([pricing](https://liquilens-undertow.com/pricing.md)). To buy Agent,
+[open its Telegram Stars invoice](https://t.me/undertow_LiquiLens_bot?start=buy_agent)
+or send `/subscribe agent` to the [Telegram bot](https://t.me/undertow_LiquiLens_bot);
+it is active the moment the payment lands. [Desk](https://t.me/undertow_LiquiLens_bot?start=buy_desk)
+is above Telegram's Stars cap and sells by TON, USDC or invoice. Then send `/agent` to
+the bot to mint a bearer token:
 
 ```json
 {
@@ -230,7 +235,9 @@ The Agent and Desk tiers unlock the eight subscriber tools. Send `/agent` to the
 The token proves **identity only**. Entitlement is re-read from live membership on
 every call, so access stops when the subscription does rather than when the token
 expires. Subscriber tools are invisible to an anonymous `tools/list`, and
-`agent_access_status` tells you where you stand.
+`agent_access_status` tells you where you stand. An Agent paid in Stars, TON or USDC
+is metered daily; `agent_access_status` and the self-meter below report the exact
+limit, and card memberships carry no daily meter.
 
 Only `tools/call` is metered, reported on `X-MCP-Usage-Used`, `X-MCP-Usage-Limit`
 and `X-MCP-Usage-Remaining`. `GET /undertow/mcp/usage` is the self-meter. Hitting a
@@ -243,9 +250,9 @@ This repo is the **listing**: a README and the two manifests that let directorie
 describe the server accurately. The server itself is hosted at the endpoint above;
 its source is `deploy/hetzner/undertow-mcp` in the Undertow product repository
 `https://github.com/beepboop2025/liquilens-undertow` (private, so not linked here)
-and the registry target remains hosted 1.14.0. The adapter forwards the native public schemas and results without computing
-market values or granting subscriber access. Its own version is 0.3.0; the
-upstream contract is 1.14.0.
+and the registry target remains hosted 1.14.1. The adapter forwards the native public schemas and results without computing
+market values or granting subscriber access. Its own version is 0.3.1; the
+upstream contract is 1.14.1.
 
 ## Verification and deployment boundary
 
