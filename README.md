@@ -50,7 +50,7 @@ Undertow exposes estimated exit cost by position size and venue, the concentrati
 quoted depth, realized depth-collapse episodes, and liquidity tiers across market segments.
 This MCP 1.14.1 endpoint exposes 25 read-only tools, split into 17 public and 8 subscriber
 tools, plus 3 guided prompts. Its capability inventory is pinned to liquilens-undertow
-commit `a04c779f7fc20b91d3d8003b08920a303a23354b`, the hosted implementation at
+commit `a2a1491e0a277fb6c3afb846d6318c9b2b6655ea`, the hosted implementation at
 `deploy/hetzner/undertow-mcp`. The stdio discovery server in
 `undertow_mm/mcp_server.py` is a separate discovery surface; it is neither
 this registry listing nor the public stdio adapter provided here.
@@ -80,8 +80,9 @@ Undertow's public tools do not submit orders. Source observation dates, data
 rights and eligibility remain explicit even when hosting and backups are healthy.
 
 This repository contains the discovery manifest, documentation and an optional
-anonymous stdio adapter for the hosted service. The official registry serves
-[`io.github.beepboop2025/undertow` version 1.14.1](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.beepboop2025%2Fundertow/versions/latest).
+anonymous stdio adapter for the hosted service. It targets registry version 1.14.1 of
+[`io.github.beepboop2025/undertow`](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.beepboop2025%2Fundertow/versions/latest)
+on the official registry; that link shows the version the registry serves now.
 
 ## Local stdio and container installation
 
@@ -218,8 +219,9 @@ The Agent tier ($99/mo) and the Desk tier ($199/mo) unlock the eight subscriber 
 [open its Telegram Stars invoice](https://t.me/undertow_LiquiLens_bot?start=buy_agent)
 or send `/subscribe agent` to the [Telegram bot](https://t.me/undertow_LiquiLens_bot);
 it is active the moment the payment lands. [Desk](https://t.me/undertow_LiquiLens_bot?start=buy_desk)
-is above Telegram's Stars cap and sells by TON, USDC or invoice. Then send `/agent` to
-the bot to mint a bearer token:
+is above Telegram's Stars cap and sells by invoice, paid by UPI or bank transfer; the
+bot lists any other route it can take. Then send `/agent` to the bot to mint a bearer
+token:
 
 ```json
 {
@@ -235,9 +237,7 @@ the bot to mint a bearer token:
 The token proves **identity only**. Entitlement is re-read from live membership on
 every call, so access stops when the subscription does rather than when the token
 expires. Subscriber tools are invisible to an anonymous `tools/list`, and
-`agent_access_status` tells you where you stand. An Agent paid in Stars, TON or USDC
-is metered daily; `agent_access_status` and the self-meter below report the exact
-limit, and card memberships carry no daily meter.
+`agent_access_status` tells you where you stand, including your own daily limit.
 
 Only `tools/call` is metered, reported on `X-MCP-Usage-Used`, `X-MCP-Usage-Limit`
 and `X-MCP-Usage-Remaining`. `GET /undertow/mcp/usage` is the self-meter. Hitting a
