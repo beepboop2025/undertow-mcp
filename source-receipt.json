@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "releaseCommit": "a2a1491e0a277fb6c3afb846d6318c9b2b6655ea",
+  "releaseCommit": "315450135d4a94d917baf749cb14a6cf736cfbfe",
   "implementationRepository": "https://github.com/beepboop2025/liquilens-undertow",
-  "contractSha256": "68a7c5fcca2921ae0f0ee8406a696ef7600ee30385fc0dd3b66a9b6be5d847a4",
+  "contractSha256": "3e6608508503bcfc2ee17065c60dc5cdca5d3a7d48966956ff9f1af56af5b648",
   "artifacts": {
     "deploy/hetzner/undertow-mcp/undertow_mcp.py": {
       "sha256": "01d5cdab51feed4f6613693299d618cf8ba0b795b24ba5f4dd49163cfdc3c729"

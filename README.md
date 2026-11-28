@@ -50,7 +50,7 @@ Undertow exposes estimated exit cost by position size and venue, the concentrati
 quoted depth, realized depth-collapse episodes, and liquidity tiers across market segments.
 This MCP 1.14.1 endpoint exposes 25 read-only tools, split into 17 public and 8 subscriber
 tools, plus 3 guided prompts. Its capability inventory is pinned to liquilens-undertow
-commit `a2a1491e0a277fb6c3afb846d6318c9b2b6655ea`, the hosted implementation at
+commit `315450135d4a94d917baf749cb14a6cf736cfbfe`, the hosted implementation at
 `deploy/hetzner/undertow-mcp`. The stdio discovery server in
 `undertow_mm/mcp_server.py` is a separate discovery surface; it is neither
 this registry listing nor the public stdio adapter provided here.
