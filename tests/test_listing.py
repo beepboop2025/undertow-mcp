@@ -156,7 +156,7 @@ class ListingContractTests(unittest.TestCase):
             "verify_record_howto",
         }
 
-        self.assertEqual(version, "1.14.0")
+        self.assertEqual(version, "1.14.1")
         self.assertEqual(self.server["version"], version)
         self.assertIn(pin, self.readme)
         self.assertIn("deploy/hetzner/undertow-mcp", self.readme)
